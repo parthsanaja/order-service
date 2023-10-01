@@ -29,6 +29,14 @@ public class PurchaseOrderService {
     @Autowired
     private PurchaseOrderMapper purchaseOrderMapper;
 
+    public Mono<PurchaseOrderDto> getPurchaseOrder(Integer id) {
+        return Mono.fromSupplier(() -> {
+            return orderRepository.findById(id).orElse(null);
+        }).map(
+                purchaseOrder -> purchaseOrderMapper.purchaseOrderToDto(purchaseOrder)
+        );
+    }
+
     public Mono<PurchaseOrderDto> createPurchaseOrder(Mono<PurchaseOrderDto> purchaseOrderDtoMono) {
         return purchaseOrderDtoMono.map(
                 PurchaseOrderContext::new

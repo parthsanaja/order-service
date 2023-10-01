@@ -25,4 +25,18 @@ services:
     build: ../product-service-v2
     image: parthsanaja/product-service-v2:latest
     ports:
-      - 8091:8091
+      - "8091:8091"
+  user-service-v2:
+    build: ../user-service-v2
+    image: parthsanaja/user-service-v2:latest
+    ports:
+      - "8092:8092"
+    depends_on:
+      - postgres
+  order-service:
+    build: ./
+    image: parthsanaja/order-service:latest
+    ports:
+      - "8090:8090"
+    depends_on:
+      - postgres
