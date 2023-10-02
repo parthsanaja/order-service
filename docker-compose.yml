@@ -26,6 +26,8 @@ services:
     image: parthsanaja/product-service-v2:latest
     ports:
       - "8091:8091"
+    depends_on:
+      - mongo
   user-service-v2:
     build: ../user-service-v2
     image: parthsanaja/user-service-v2:latest
@@ -40,3 +42,25 @@ services:
       - "8090:8090"
     depends_on:
       - postgres
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=pass4
+      - MONGO_INITDB_DATABASE=authdb
+    ports:
+      - "26017:27017"
+    volumes:
+      - ~/docker-volume/mongo/data/db:/data/db
+  mongo-express:
+    image: mongo-express
+    restart: always
+    environment:
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=admin
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=pass4
+      - ME_CONFIG_MONGODB_URL=mongodb://admin:pass4@mongo:27017/
+    depends_on:
+      - mongo
+    ports:
+      - "8888:8081"
+
